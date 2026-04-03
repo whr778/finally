@@ -36,7 +36,7 @@ DEFAULT_PARAMS: dict[str, float] = {"sigma": 0.25, "mu": 0.05}
 # Correlation groups for the simulator's Cholesky decomposition
 # Tickers in the same group have higher intra-group correlation
 CORRELATION_GROUPS: dict[str, set[str]] = {
-    "tech": {"AAPL", "GOOGL", "MSFT", "AMZN", "META", "NVDA", "NFLX"},
+    "tech": {"AAPL", "GOOGL", "MSFT", "AMZN", "META", "NVDA", "NFLX"},  # TSLA excluded — handled separately in _pairwise_correlation
     "finance": {"JPM", "V"},
 }
 

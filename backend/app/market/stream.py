@@ -48,6 +48,9 @@ def create_stream_router(price_cache: PriceCache) -> APIRouter:
     return router
 
 
+HEARTBEAT_INTERVAL = 15  # seconds between heartbeat comments
+
+
 async def _generate_events(
     price_cache: PriceCache,
     request: Request,
@@ -62,6 +65,7 @@ async def _generate_events(
     yield "retry: 1000\n\n"
 
     last_version = -1
+    last_send_time = asyncio.get_running_loop().time()
     client_ip = request.client.host if request.client else "unknown"
     logger.info("SSE client connected: %s", client_ip)
 
@@ -72,6 +76,7 @@ async def _generate_events(
                 logger.info("SSE client disconnected: %s", client_ip)
                 break
 
+            now = asyncio.get_running_loop().time()
             current_version = price_cache.version
             if current_version != last_version:
                 last_version = current_version
@@ -81,6 +86,12 @@ async def _generate_events(
                     data = {ticker: update.to_dict() for ticker, update in prices.items()}
                     payload = json.dumps(data)
                     yield f"data: {payload}\n\n"
+                    last_send_time = now
+
+            elif now - last_send_time >= HEARTBEAT_INTERVAL:
+                # Keep the connection alive through proxies/load balancers
+                yield ": heartbeat\n\n"
+                last_send_time = now
 
             await asyncio.sleep(interval)
     except asyncio.CancelledError:

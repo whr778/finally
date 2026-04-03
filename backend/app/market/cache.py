@@ -17,6 +17,9 @@ class PriceCache:
 
     def __init__(self) -> None:
         self._prices: dict[str, PriceUpdate] = {}
+        # threading.Lock (not asyncio.Lock) — intentional. The cache is written
+        # from both the event-loop thread (SimulatorDataSource) and from
+        # asyncio.to_thread workers (MassiveDataSource._fetch_snapshots).
         self._lock = Lock()
         self._version: int = 0  # Monotonically increasing; bumped on every update
 
@@ -64,7 +67,8 @@ class PriceCache:
     @property
     def version(self) -> int:
         """Current version counter. Useful for SSE change detection."""
-        return self._version
+        with self._lock:
+            return self._version
 
     def __len__(self) -> int:
         with self._lock:
