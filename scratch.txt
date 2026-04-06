@@ -6,3 +6,10 @@ Finally, document the approach for the simulator in the MARKET_SIMULATOR.md; Thi
 Please read all of the documents in the planning directory. Then design the market data backend in 
  detail. Write a new document called MARKET_DATA_DESIGN.md that has code snippets and examples to    
 implement all the market data functionality (unified API, simulator, Massive API). 
+
+Please read all of the documents in the planning directory, then build the complete Market Data backend/ directory.
+This should include:
+1. The Massive API interface
+2. The unified market data interface
+3. The market data simulator
+Include full unit tests
