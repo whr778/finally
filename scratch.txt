@@ -1,0 +1,4 @@
+Please carry out comprehensive research and write 3 documents to the planning directory.
+Research the API from Massive (formerly Polygon.io) for retreiving realtime and end of day proces for multiple tickers; write documentation with code samples in MASSIVE_API.md.  
+Use MASSIVE_API.md to design the unified Python API that we should use in this project for retreiving stock prices that uses the Massive API if the MASSIVE_API_KEY is set, otherwise uses a simulator; Document this in the MARKET_INTERFACE.md.  
+Finally, document the approach for the simulator in the MARKET_SIMULATOR.md; This is the approach for simulating stock prices whe the MASSIVE_API_KEY is not set.
