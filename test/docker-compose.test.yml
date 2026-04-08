@@ -1,0 +1,47 @@
+version: "3.9"
+
+# Full system test environment.
+# Usage: docker compose -f test/docker-compose.test.yml up --abort-on-container-exit
+#
+# The 'app' service runs the full FinAlly application with LLM_MOCK=true.
+# The 'playwright' service runs all E2E specs against it.
+
+services:
+  app:
+    image: finally:latest
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_MOCK=true
+      - MASSIVE_API_KEY=
+      - DB_PATH=/app/db/finally.db
+    volumes:
+      - test-db:/app/db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.48.0-jammy
+    working_dir: /test
+    volumes:
+      - ./:/test
+      - playwright-results:/test/test-results
+    environment:
+      - BASE_URL=http://app:8000
+    command: >
+      sh -c "npm install --prefix /test &&
+             npx playwright install --with-deps chromium &&
+             npx playwright test --reporter=list"
+    depends_on:
+      app:
+        condition: service_healthy
+
+volumes:
+  test-db:
+  playwright-results:

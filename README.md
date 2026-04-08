@@ -25,17 +25,44 @@ Single Docker container serving everything on port 8000:
 
 ## Quick Start
 
-```bash
-# Clone and configure
-cp .env.example .env
-# Add your OPENROUTER_API_KEY to .env
+### Docker (recommended)
 
-# Run with Docker
+```bash
+# 1. Copy and configure environment
+cp .env.example .env
+# Edit .env — add your OPENROUTER_API_KEY
+
+# 2. Build and run
 docker build -t finally .
 docker run -v finally-data:/app/db -p 8000:8000 --env-file .env finally
 
-# Open http://localhost:8000
+# 3. Open http://localhost:8000
 ```
+
+To stop: `docker stop $(docker ps -q --filter ancestor=finally)`
+
+### Local development
+
+Run the backend and frontend in separate terminals.
+
+**Terminal 1 — Backend:**
+```bash
+cp .env.example .env         # Add OPENROUTER_API_KEY
+cd backend
+uv sync --extra dev          # Install dependencies
+uv run uvicorn app.main:app --reload --port 8000
+```
+
+**Terminal 2 — Frontend:**
+```bash
+cd frontend
+npm install
+npm run dev                  # Dev server on http://localhost:3000
+```
+
+Open **http://localhost:3000**. The frontend dev server automatically proxies all `/api/*` requests to the backend on port 8000 — no extra configuration needed.
+
+> To use a different backend port, set `NEXT_PUBLIC_API_URL=http://localhost:<port>` before running `npm run dev`.
 
 ## Environment Variables
 
@@ -44,6 +71,40 @@ docker run -v finally-data:/app/db -p 8000:8000 --env-file .env finally
 | `OPENROUTER_API_KEY` | Yes | OpenRouter API key for AI chat |
 | `MASSIVE_API_KEY` | No | Massive (Polygon.io) key for real market data; omit to use simulator |
 | `LLM_MOCK` | No | Set `true` for deterministic mock LLM responses (testing) |
+| `DB_PATH` | No | Custom path for the SQLite database file |
+
+## Testing
+
+### Frontend unit tests
+
+```bash
+cd frontend
+npm install
+node_modules/.bin/jest --coverage    # 135 tests, 84%+ coverage
+```
+
+### Backend integration tests
+
+```bash
+cd backend
+.venv/bin/pytest tests/ -v           # 90 tests
+```
+
+### E2E system tests (Playwright)
+
+Requires the app running at `http://localhost:8000`:
+
+```bash
+cd test
+npm install
+BASE_URL=http://localhost:8000 npx playwright test
+```
+
+Or run the full system in Docker:
+
+```bash
+docker compose -f test/docker-compose.test.yml up --abort-on-container-exit
+```
 
 ## Project Structure
 
