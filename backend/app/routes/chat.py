@@ -6,7 +6,7 @@ import json
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 
 from app.database import get_db
 from app.llm import call_llm
@@ -107,7 +107,10 @@ async def chat(body: ChatRequest, request: Request):
 
     await _save_message("user", body.content)
 
-    llm_resp = await call_llm(context, history, body.content)
+    try:
+        llm_resp = await call_llm(context, history, body.content)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"LLM call failed: {e}")
 
     trades_executed: list[ChatTradeResult] = []
     watchlist_changes: list[ChatWatchlistResult] = []

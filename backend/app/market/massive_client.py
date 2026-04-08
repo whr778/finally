@@ -96,28 +96,47 @@ class MassiveDataSource(MarketDataSource):
             snapshots = await asyncio.to_thread(self._fetch_snapshots)
             processed = 0
             for snap in snapshots:
-                try:
-                    price = snap.last_trade.price
-                    # Massive timestamps are Unix milliseconds → convert to seconds
-                    timestamp = snap.last_trade.timestamp / 1000.0
-                    self._cache.update(
-                        ticker=snap.ticker,
-                        price=price,
-                        timestamp=timestamp,
-                    )
-                    processed += 1
-                except (AttributeError, TypeError) as e:
-                    logger.warning(
-                        "Skipping snapshot for %s: %s",
-                        getattr(snap, "ticker", "???"),
-                        e,
-                    )
+                price = self._extract_price(snap)
+                if price is None:
+                    logger.warning("No price data for %s", getattr(snap, "ticker", "???"))
+                    continue
+                timestamp = (
+                    snap.last_trade.timestamp / 1000.0
+                    if snap.last_trade and snap.last_trade.timestamp
+                    else None
+                )
+                self._cache.update(ticker=snap.ticker, price=price, timestamp=timestamp)
+                processed += 1
             logger.debug("Massive poll: updated %d/%d tickers", processed, len(self._tickers))
 
         except Exception as e:
             logger.error("Massive poll failed: %s", e)
             # Don't re-raise — the loop will retry on the next interval.
             # Common failures: 401 (bad key), 429 (rate limit), network errors.
+
+    @staticmethod
+    def _extract_price(snap) -> float | None:
+        """Return the best available price from a snapshot.
+
+        Preference order: last trade → today's close → previous day's close.
+        last_trade is None outside market hours, so fallbacks are needed.
+        """
+        try:
+            if snap.last_trade and snap.last_trade.price:
+                return snap.last_trade.price
+        except AttributeError:
+            pass
+        try:
+            if snap.day and snap.day.close:
+                return snap.day.close
+        except AttributeError:
+            pass
+        try:
+            if snap.prev_day and snap.prev_day.close:
+                return snap.prev_day.close
+        except AttributeError:
+            pass
+        return None
 
     def _fetch_snapshots(self) -> list:
         """Synchronous call to the Massive REST API. Runs in a thread."""

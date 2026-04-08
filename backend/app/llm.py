@@ -104,4 +104,7 @@ async def call_llm(portfolio_context: str, history: list[dict], user_message: st
     )
 
     raw = response.choices[0].message.content
-    return json.loads(raw)
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return {"message": raw, "trades": [], "watchlist_changes": []}
