@@ -6,8 +6,13 @@ import asyncio
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+
+# Load .env from the project root (one level above backend/).
+# No-op if vars are already set (e.g., Docker --env-file).
+load_dotenv(Path(__file__).resolve().parent.parent.parent / ".env")
 
 from app.database import get_db, init_db
 from app.market import PriceCache, create_market_data_source, create_stream_router

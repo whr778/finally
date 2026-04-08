@@ -30,6 +30,16 @@ export default function Watchlist({
   const [addError, setAddError] = useState<string | null>(null);
   const [removeError, setRemoveError] = useState<string | null>(null);
 
+  async function handleRemove(ticker: string, e: React.MouseEvent) {
+    e.stopPropagation();
+    setRemoveError(null);
+    try {
+      await onRemove(ticker);
+    } catch (err) {
+      setRemoveError(err instanceof Error ? err.message : "Failed to remove ticker");
+    }
+  }
+
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
     const sym = input.trim().toUpperCase();
@@ -54,7 +64,7 @@ export default function Watchlist({
     >
       <div className="panel-label">Watchlist</div>
 
-      <div style={{ flex: 1, overflowY: "auto" }}>
+      <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
         {tickers.map((entry) => {
           const live = prices[entry.ticker];
           const price = live?.price ?? entry.price;
@@ -79,7 +89,7 @@ export default function Watchlist({
               onClick={() => onSelect(entry.ticker)}
               style={{
                 display: "grid",
-                gridTemplateColumns: "52px 1fr 64px",
+                gridTemplateColumns: "52px 1fr 72px",
                 alignItems: "center",
                 padding: "5px 10px",
                 cursor: "pointer",
@@ -141,15 +151,7 @@ export default function Watchlist({
                 <Sparkline data={sparkData} width={52} height={20} />
                 <button
                   data-testid={`remove-${entry.ticker}`}
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    try {
-                      setRemoveError(null);
-                      await onRemove(entry.ticker);
-                    } catch (err) {
-                      setRemoveError(err instanceof Error ? err.message : "Failed to remove ticker");
-                    }
-                  }}
+                  onClick={(e) => handleRemove(entry.ticker, e)}
                   title="Remove"
                   style={{
                     background: "none",
