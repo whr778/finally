@@ -30,7 +30,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. App connects to /api/stream/prices and receives live price data at ~500ms intervals
   3. Connection status indicator shows green when connected, yellow when reconnecting, red when disconnected
   4. Price data flows into Zustand store and components can subscribe to individual ticker updates without full re-renders
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 01-01-PLAN.md -- Scaffold Next.js project, Tailwind v4 dark theme, TypeScript types, Zustand stores, SSE hook
+- [ ] 01-02-PLAN.md -- UI components (ConnectionDot, Header, AppShell, PlaceholderPanels, TradeBar, ChatDrawer), layout wiring
 **UI hint**: yes
 
 ### Phase 2: Watchlist & Header
@@ -102,7 +105,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Data Pipeline | 0/? | Not started | - |
+| 1. Foundation & Data Pipeline | 0/2 | Planned | - |
 | 2. Watchlist & Header | 0/? | Not started | - |
 | 3. Trading & Positions | 0/? | Not started | - |
 | 4. Visualizations & Charts | 0/? | Not started | - |
