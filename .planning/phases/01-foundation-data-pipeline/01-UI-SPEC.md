@@ -1,10 +1,11 @@
 ---
 phase: 1
 slug: foundation-data-pipeline
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-04-20
+reviewed_at: 2026-04-20
 ---
 
 # Phase 1 -- UI Design Contract
@@ -50,7 +51,7 @@ Exceptions: Connection status dot is 8px diameter (sm token). Header height is 4
 | Role | Size | Weight | Line Height | Font Family |
 |------|------|--------|-------------|-------------|
 | Body data | 14px | 400 (regular) | 1.5 | JetBrains Mono, monospace |
-| Label | 12px | 500 (medium) | 1.4 | Inter, system-ui, sans-serif |
+| Label | 12px | 400 (regular) | 1.4 | Inter, system-ui, sans-serif |
 | Heading | 16px | 600 (semibold) | 1.2 | Inter, system-ui, sans-serif |
 | Display | 20px | 600 (semibold) | 1.2 | Inter, system-ui, sans-serif |
 
@@ -194,7 +195,7 @@ Three visual states for the `ConnectionDot` component:
 | Reconnecting | `#d29922` (yellow) | CONNECTING | `EventSource.onerror` fires and readyState is CONNECTING |
 | Disconnected | `#f85149` (red) | OFFLINE | `EventSource.onerror` fires and readyState is CLOSED |
 
-**Layout:** Dot (8px circle) + 4px gap + text label. Right-aligned in header. Dot uses CSS `border-radius: 50%` and `background-color`. Text uses Label style (12px, medium weight).
+**Layout:** Dot (8px circle) + 4px gap + text label. Right-aligned in header. Dot uses CSS `border-radius: 50%` and `background-color`. Text uses Label style (12px, regular weight).
 
 **E2E contract:** Element with `data-testid="connection-dot"` must contain the text "LIVE" when the SSE connection is active.
 
@@ -213,7 +214,7 @@ Three visual states for the `ConnectionDot` component:
 | Logo "Fin" | Display 20px, semibold, `#e6edf3` | -- | "Fin" |
 | Logo "Ally" | Display 20px, semibold, `#ecad0a` | -- | "Ally" |
 | Total value | Display 20px, semibold, `#e6edf3` | `total-value` | Formatted: `$10,000.00` |
-| Cash label | Label 12px, medium, `#7d8590` | -- | "Cash" |
+| Cash label | Label 12px, regular, `#7d8590` | -- | "Cash" |
 | Cash value | Body data 14px, regular, `#e6edf3` | `cash-balance` | Formatted: `$10,000.00` |
 | Connection | See ConnectionDot spec above | `connection-dot` | "LIVE" / "CONNECTING" / "OFFLINE" |
 
