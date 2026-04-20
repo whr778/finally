@@ -13,3 +13,5 @@ This should include:
 2. The unified market data interface
 3. The market data simulator
 Include full unit tests
+
+npx get-shit-done-cc@latest
