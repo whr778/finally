@@ -48,8 +48,8 @@ Plans:
   5. Header displays live-updating total portfolio value and cash balance
 **Plans:** 2 plans
 Plans:
-- [ ] 02-01-PLAN.md -- Watchlist store enhancements, flash animation CSS, SVG sparkline component
-- [ ] 02-02-PLAN.md -- WatchlistRow, TickerInput, WatchlistPanel components, AppShell/TradeBar wiring, visual checkpoint
+- [x] 02-01-PLAN.md -- Watchlist store enhancements, flash animation CSS, SVG sparkline component
+- [x] 02-02-PLAN.md -- WatchlistRow, TickerInput, WatchlistPanel components, AppShell/TradeBar wiring, visual checkpoint
 **UI hint**: yes
 
 ### Phase 3: Trading & Positions
