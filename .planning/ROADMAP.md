@@ -64,8 +64,8 @@ Plans:
   5. Clicking a ticker in the watchlist populates the trade bar
 **Plans:** 2 plans
 Plans:
-- [ ] 03-01-PLAN.md -- Activate trade bar: editable inputs, trade execution via POST /api/portfolio/trade, inline success/error feedback
-- [ ] 03-02-PLAN.md -- Create PositionsTable component with 6-column P&L table, wire into AppShell replacing placeholder
+- [x] 03-01-PLAN.md -- Activate trade bar: editable inputs, trade execution via POST /api/portfolio/trade, inline success/error feedback
+- [x] 03-02-PLAN.md -- Create PositionsTable component with 6-column P&L table, wire into AppShell replacing placeholder
 **UI hint**: yes
 
 ### Phase 4: Visualizations & Charts
