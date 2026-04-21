@@ -1,6 +1,10 @@
 'use client'
 
-export default function TradeBar() {
+interface TradeBarProps {
+  selectedTicker: string | null
+}
+
+export default function TradeBar({ selectedTicker }: TradeBarProps) {
   return (
     <div
       data-testid="trade-bar"
@@ -14,8 +18,9 @@ export default function TradeBar() {
         data-testid="trade-ticker"
         type="text"
         placeholder="Ticker"
-        disabled
-        className="bg-bg-primary text-text-primary font-mono text-sm rounded px-2 py-1.5 w-24 disabled:opacity-50 border border-border-subtle"
+        value={selectedTicker || ''}
+        readOnly
+        className="bg-bg-primary text-text-primary font-mono text-sm rounded px-2 py-1.5 w-24 border border-border-subtle"
       />
       <input
         data-testid="trade-qty"
