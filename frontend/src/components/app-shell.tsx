@@ -8,6 +8,7 @@ import PlaceholderPanel from '@/components/placeholder-panel'
 import WatchlistPanel from '@/components/watchlist-panel'
 import TradeBar from '@/components/trade-bar'
 import ChatDrawer from '@/components/chat-drawer'
+import PositionsTable from '@/components/positions-table'
 
 export default function AppShell() {
   useSSE()
@@ -40,7 +41,7 @@ export default function AppShell() {
           </p>
         </div>
         <div className="col-span-2 grid grid-cols-3 gap-4">
-          <PlaceholderPanel title="Positions" phaseNote="Coming in Phase 3" />
+          <PositionsTable />
           <PlaceholderPanel title="Portfolio Map" phaseNote="Coming in Phase 4" />
           <PlaceholderPanel title="P&amp;L" phaseNote="Coming in Phase 4" />
         </div>
