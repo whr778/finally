@@ -24,3 +24,18 @@ body {
   background-color: #0d1117;
   color: #e6edf3;
 }
+
+@keyframes flashUpBg {
+  0% { background-color: rgba(63, 185, 80, 0.3); }
+  100% { background-color: transparent; }
+}
+@keyframes flashDownBg {
+  0% { background-color: rgba(248, 81, 73, 0.3); }
+  100% { background-color: transparent; }
+}
+.flash-up, .flash-up-a, .flash-up-b {
+  animation: flashUpBg 500ms ease-out forwards;
+}
+.flash-down, .flash-down-a, .flash-down-b {
+  animation: flashDownBg 500ms ease-out forwards;
+}
