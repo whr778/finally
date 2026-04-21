@@ -32,8 +32,8 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Price data flows into Zustand store and components can subscribe to individual ticker updates without full re-renders
 **Plans:** 2 plans
 Plans:
-- [ ] 01-01-PLAN.md -- Scaffold Next.js project, Tailwind v4 dark theme, TypeScript types, Zustand stores, SSE hook
-- [ ] 01-02-PLAN.md -- UI components (ConnectionDot, Header, AppShell, PlaceholderPanels, TradeBar, ChatDrawer), layout wiring
+- [x] 01-01-PLAN.md -- Scaffold Next.js project, Tailwind v4 dark theme, TypeScript types, Zustand stores, SSE hook
+- [x] 01-02-PLAN.md -- UI components (ConnectionDot, Header, AppShell, PlaceholderPanels, TradeBar, ChatDrawer), layout wiring
 **UI hint**: yes
 
 ### Phase 2: Watchlist & Header
