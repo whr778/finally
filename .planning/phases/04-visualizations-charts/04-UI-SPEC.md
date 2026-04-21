@@ -130,6 +130,8 @@ border-radius: 8px;
 
 ## Component Contracts
 
+**Primary visual anchor:** The heatmap treemap is the primary focal point of this phase -- the green/red color contrast draws the eye before the monochrome blue charts, establishing portfolio health at a glance.
+
 ### 1. Portfolio Heatmap (Treemap)
 
 **Placement:** Replaces `<PlaceholderPanel title="Portfolio Map" phaseNote="Coming in Phase 4" />` in AppShell. Second panel in the `col-span-2 grid grid-cols-3 gap-4` bottom row.
@@ -207,13 +209,13 @@ The `content` prop receives `{ x, y, width, height, name, pct_change }` for each
     </defs>
     <XAxis
       dataKey="recorded_at"
-      tick={{ fontSize: 10, fill: '#7d8590' }}
+      tick={{ fontSize: 12, fill: '#7d8590' }}
       tickFormatter={formatTime}
       axisLine={false}
       tickLine={false}
     />
     <YAxis
-      tick={{ fontSize: 10, fill: '#7d8590' }}
+      tick={{ fontSize: 12, fill: '#7d8590' }}
       tickFormatter={formatDollar}
       axisLine={false}
       tickLine={false}
@@ -270,7 +272,7 @@ const chart = createChart(containerRef, {
     background: { type: 'solid', color: '#161b22' },
     textColor: '#7d8590',
     fontFamily: "'Inter', system-ui, sans-serif",
-    fontSize: 10,
+    fontSize: 12,
   },
   grid: {
     vertLines: { color: 'rgba(125, 133, 144, 0.1)' },
