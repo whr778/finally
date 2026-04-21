@@ -62,7 +62,10 @@ Plans:
   3. Cash balance updates immediately after trade execution
   4. Positions table shows ticker, quantity, avg cost, current price, unrealized P&L, and % change
   5. Clicking a ticker in the watchlist populates the trade bar
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 03-01-PLAN.md -- Activate trade bar: editable inputs, trade execution via POST /api/portfolio/trade, inline success/error feedback
+- [ ] 03-02-PLAN.md -- Create PositionsTable component with 6-column P&L table, wire into AppShell replacing placeholder
 **UI hint**: yes
 
 ### Phase 4: Visualizations & Charts
@@ -110,7 +113,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 |-------|----------------|--------|-----------|
 | 1. Foundation & Data Pipeline | 2/2 | Planned | - |
 | 2. Watchlist & Header | 0/2 | Planned | - |
-| 3. Trading & Positions | 0/? | Not started | - |
+| 3. Trading & Positions | 0/2 | Planned | - |
 | 4. Visualizations & Charts | 0/? | Not started | - |
 | 5. AI Chat Panel | 0/? | Not started | - |
 | 6. Docker & Deployment | 0/? | Not started | - |
