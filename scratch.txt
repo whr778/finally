@@ -15,3 +15,5 @@ This should include:
 Include full unit tests
 
 npx get-shit-done-cc@latest
+
+please build the entire project - everything as described in planning/PLAN.md
