@@ -513,22 +513,19 @@ These are hard requirements from existing E2E test files that must be matched ex
 | A3 | Polling portfolio every 5 seconds is sufficient for "live-updating" header | Common Pitfalls | LOW -- can reduce interval if not responsive enough |
 | A4 | The alternating CSS class pattern works in all target browsers | Common Pitfalls | LOW -- well-established pattern, CSS animations broadly supported |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Portfolio re-fetch interval**
+1. **Portfolio re-fetch interval** — RESOLVED: 5-second interval via setInterval in AppShell
    - What we know: Header needs live-updating total value that changes with prices
-   - What's unclear: How frequently to re-fetch (1s, 5s, 10s?)
-   - Recommendation: Start with 5 seconds. This balances responsiveness with backend load. The value changes slowly (positions don't change, only prices do). Could also compute client-side from positions + price store, but server is the source of truth for cash balance.
+   - Decision: 5 seconds balances responsiveness with backend load. Server is source of truth for cash balance.
 
-2. **Selected ticker state ownership**
+2. **Selected ticker state ownership** — RESOLVED: Lifted state in AppShell via useState
    - What we know: Clicking a watchlist row selects it for chart + populates trade bar
-   - What's unclear: Whether to use a new Zustand store, add to existing store, or lift state to AppShell
-   - Recommendation: Add a `selectedTicker` field to a simple store or lift to AppShell state. Keep it minimal -- Phase 4 will build the full chart wiring. For now, just store the string and display it in the chart placeholder.
+   - Decision: `const [selectedTicker, setSelectedTicker] = useState<string | null>(null)` in AppShell, passed as props to WatchlistPanel and TradeBar. Phase 4 will build full chart wiring.
 
-3. **Sparkline gradient ID uniqueness**
+3. **Sparkline gradient ID uniqueness** — RESOLVED: React 19 useId() for unique SVG gradient IDs
    - What we know: SVG `<linearGradient>` requires unique `id` attributes
-   - What's unclear: Whether React 19 `useId()` produces IDs safe for SVG `id` attributes
-   - Recommendation: Use `useId()` -- it's designed for this purpose in React 19. The `:` prefix in React's generated IDs is valid in SVG. [VERIFIED: React docs confirm useId generates unique IDs for accessibility and element relationships]
+   - Decision: Use `useId()` from React 19. The `:` prefix in generated IDs is valid in SVG. [VERIFIED: React docs confirm useId generates unique IDs]
 
 ## Validation Architecture
 
