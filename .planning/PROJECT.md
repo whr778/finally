@@ -26,7 +26,7 @@ Users see live-updating prices and can trade a simulated portfolio through both 
 ### Active
 
 - [ ] Next.js frontend with dark trading terminal UI
-- [ ] Live price watchlist with flash animations and sparklines
+- [x] Live price watchlist with flash animations and sparklines — Validated in Phase 02: watchlist-header
 - [ ] Portfolio heatmap (treemap) and P&L chart
 - [ ] Positions table with real-time P&L
 - [ ] Trade bar for manual order entry
@@ -50,7 +50,7 @@ Users see live-updating prices and can trade a simulated portfolio through both 
 ## Context
 
 - Backend is ~90% complete with full API surface, market data pipeline, and LLM integration
-- Frontend is 0% — needs to be built from scratch as a Next.js static export
+- Frontend has watchlist panel with live prices, flash animations, sparklines, and ticker CRUD (Phase 02 complete)
 - E2E tests reference specific `data-testid` attributes that the frontend must implement
 - Single Docker container serves both backend API and static frontend on port 8000
 - Color scheme: accent yellow #ecad0a, blue primary #209dd7, purple secondary #753991
@@ -95,4 +95,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-20 after initialization*
+*Last updated: 2026-04-21 after Phase 02 completion*
