@@ -46,7 +46,10 @@ Plans:
   3. SVG sparkline mini-charts appear beside each ticker, accumulating price history since page load
   4. User can add and remove tickers from the watchlist
   5. Header displays live-updating total portfolio value and cash balance
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 02-01-PLAN.md -- Watchlist store enhancements, flash animation CSS, SVG sparkline component
+- [ ] 02-02-PLAN.md -- WatchlistRow, TickerInput, WatchlistPanel components, AppShell/TradeBar wiring, visual checkpoint
 **UI hint**: yes
 
 ### Phase 3: Trading & Positions
@@ -105,8 +108,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Data Pipeline | 0/2 | Planned | - |
-| 2. Watchlist & Header | 0/? | Not started | - |
+| 1. Foundation & Data Pipeline | 2/2 | Planned | - |
+| 2. Watchlist & Header | 0/2 | Planned | - |
 | 3. Trading & Positions | 0/? | Not started | - |
 | 4. Visualizations & Charts | 0/? | Not started | - |
 | 5. AI Chat Panel | 0/? | Not started | - |
