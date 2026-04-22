@@ -76,7 +76,10 @@ Plans:
   1. Portfolio heatmap (treemap) displays positions sized by portfolio weight and colored by P&L (green=profit, red=loss)
   2. P&L line chart shows total portfolio value over time using snapshot history from the backend
   3. Main chart area displays a larger price chart for the currently selected ticker (via Lightweight Charts)
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 04-01-PLAN.md -- Install charting deps (recharts, lightweight-charts), create HeatmapPanel treemap and PnlChart area chart
+- [ ] 04-02-PLAN.md -- Create TickerChart with Lightweight Charts, wire all 3 components into AppShell replacing placeholders
 **UI hint**: yes
 
 ### Phase 5: AI Chat Panel
@@ -114,6 +117,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Foundation & Data Pipeline | 2/2 | Planned | - |
 | 2. Watchlist & Header | 0/2 | Planned | - |
 | 3. Trading & Positions | 0/2 | Planned | - |
-| 4. Visualizations & Charts | 0/? | Not started | - |
+| 4. Visualizations & Charts | 0/2 | Planned | - |
 | 5. AI Chat Panel | 0/? | Not started | - |
 | 6. Docker & Deployment | 0/? | Not started | - |
