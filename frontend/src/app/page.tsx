@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Header } from "@/components/Header";
 import { TradeBar } from "@/components/TradeBar";
 import { Watchlist } from "@/components/Watchlist";
 
@@ -9,32 +10,7 @@ export default function Page() {
 
   return (
     <main className="h-full flex flex-col">
-      <header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          padding: "10px 16px",
-          borderBottom: "1px solid var(--border)",
-          background: "var(--bg-surface)",
-        }}
-      >
-        <span
-          style={{
-            color: "var(--accent)",
-            fontWeight: 600,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            fontSize: 13,
-          }}
-        >
-          FinAlly
-        </span>
-        <span
-          style={{ marginLeft: 10, color: "var(--text-muted)", fontSize: 12 }}
-        >
-          AI Trading Workstation
-        </span>
-      </header>
+      <Header />
       <section
         style={{
           flex: 1,
