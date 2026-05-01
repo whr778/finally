@@ -32,14 +32,21 @@ Single Docker container serving everything on port 8000:
 cp .env.example .env
 # Edit .env — add your OPENROUTER_API_KEY
 
-# 2. Build and run
-docker build -t finally .
-docker run -v finally-data:/app/db -p 8000:8000 --env-file .env finally
+# 2. Start
+./scripts/start_mac.sh --build      # macOS / Linux
+# or, on Windows PowerShell:
+# .\scripts\start_windows.ps1 -Build
 
 # 3. Open http://localhost:8000
 ```
 
-To stop: `docker stop $(docker ps -q --filter ancestor=finally)`
+To stop: `./scripts/stop_mac.sh` (or `.\scripts\stop_windows.ps1`).
+The named volume `finally-data` is preserved so the SQLite database survives restarts.
+
+> The Docker image bundles the Next.js static export and the FastAPI backend.
+> End-to-end serving (FastAPI → static frontend) is finalized in the integration
+> task; until then the image builds and runs but the frontend may not yet be
+> wired through every route in production mode.
 
 ### Local development
 
