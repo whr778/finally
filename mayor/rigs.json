@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "rigs": {
+    "finally": {
+      "git_url": "https://github.com/whr778/finally",
+      "added_at": "2026-05-01T08:01:52.597846-04:00",
+      "beads": {
+        "repo": "",
+        "prefix": "fi"
+      }
+    }
+  }
+}
