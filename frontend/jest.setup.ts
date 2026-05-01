@@ -1,5 +1,16 @@
 import "@testing-library/jest-dom";
 
+// Polyfill ResizeObserver for recharts ResponsiveContainer in jsdom
+class MockResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+Object.defineProperty(global, "ResizeObserver", {
+  writable: true,
+  value: MockResizeObserver,
+});
+
 // Mock EventSource for SSE tests
 class MockEventSource {
   url: string;
