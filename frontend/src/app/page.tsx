@@ -1,3 +1,5 @@
+import { TradeBar } from "@/components/TradeBar";
+
 export default function Page() {
   return (
     <main className="h-full flex flex-col">
@@ -31,6 +33,9 @@ export default function Page() {
         style={{ flex: 1, padding: 16, color: "var(--text-muted)", fontSize: 12 }}
       >
         Scaffold ready.
+      </section>
+      <section style={{ padding: 12, borderTop: "1px solid var(--border)" }}>
+        <TradeBar />
       </section>
     </main>
   );
