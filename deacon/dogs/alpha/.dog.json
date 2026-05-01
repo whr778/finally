@@ -1,11 +1,11 @@
 {
   "name": "alpha",
   "state": "idle",
-  "last_active": "2026-05-01T08:33:38.738248-04:00",
+  "last_active": "2026-05-01T09:03:33.638913-04:00",
   "work_started_at": "0001-01-01T00:00:00Z",
   "worktrees": {
     "finally": "/Users/williamroe/development/projects/agentic_coder/finally_gastown/deacon/dogs/alpha/finally"
   },
   "created_at": "2026-05-01T08:32:55.32415-04:00",
-  "updated_at": "2026-05-01T08:33:38.738248-04:00"
+  "updated_at": "2026-05-01T09:03:33.638914-04:00"
 }
