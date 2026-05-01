@@ -1,0 +1,9 @@
+{
+  "channel": "witness",
+  "payload": {
+    "message": "POLECAT_DONE guzzle exit=DEFERRED",
+    "source": "polecat"
+  },
+  "timestamp": "2026-05-01T08:37:54-04:00",
+  "type": "POLECAT_DONE"
+}

@@ -1,0 +1,9 @@
+{
+  "channel": "witness",
+  "payload": {
+    "message": "POLECAT_DONE nitro exit=COMPLETED",
+    "source": "polecat"
+  },
+  "timestamp": "2026-05-01T08:35:42-04:00",
+  "type": "POLECAT_DONE"
+}
