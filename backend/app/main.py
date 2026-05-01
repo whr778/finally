@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -18,8 +17,9 @@ from app.database import get_db, init_db
 from app.market import PriceCache, create_market_data_source, create_stream_router
 from app.routes.chat import router as chat_router
 from app.routes.health import router as health_router
-from app.routes.portfolio import router as portfolio_router, _insert_snapshot
+from app.routes.portfolio import router as portfolio_router
 from app.routes.watchlist import router as watchlist_router
+from app.snapshots import start_snapshot_tasks
 
 # Path where the Next.js static export is placed (Dockerfile copies it here).
 _STATIC_DIR = Path(__file__).parent.parent / "static"
@@ -46,22 +46,13 @@ async def lifespan(app: FastAPI):
     app.state.market_source = source
     await source.start(initial_tickers)
 
-    snapshot_task = asyncio.create_task(_snapshot_loop(_price_cache))
+    snapshot_tasks = start_snapshot_tasks(_price_cache)
 
     yield
 
-    snapshot_task.cancel()
+    for t in snapshot_tasks:
+        t.cancel()
     await source.stop()
-
-
-async def _snapshot_loop(price_cache: PriceCache) -> None:
-    """Record a portfolio snapshot every 30 seconds."""
-    while True:
-        await asyncio.sleep(30)
-        try:
-            await _insert_snapshot(price_cache)
-        except Exception:
-            pass
 
 
 app = FastAPI(title="FinAlly API", version="0.1.0", lifespan=lifespan)

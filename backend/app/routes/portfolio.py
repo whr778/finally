@@ -9,6 +9,7 @@ from fastapi import APIRouter, HTTPException, Request
 
 from app.database import get_db
 from app.models import PortfolioOut, PositionOut, SnapshotOut, TradeOut, TradeRequest
+from app.snapshots import insert_snapshot
 
 router = APIRouter()
 
@@ -164,7 +165,7 @@ async def execute_trade(body: TradeRequest, request: Request):
         await db.commit()
 
     try:
-        await _insert_snapshot(price_cache)
+        await insert_snapshot(price_cache)
     except Exception:
         pass  # snapshot failure must not roll back a committed trade
 
@@ -190,31 +191,3 @@ async def portfolio_history():
     return [SnapshotOut(total_value=r["total_value"], recorded_at=r["recorded_at"]) for r in rows]
 
 
-async def _insert_snapshot(price_cache) -> None:
-    """Compute total portfolio value and store a snapshot."""
-    async with get_db() as db:
-        row = await (
-            await db.execute(
-                "SELECT cash_balance FROM users_profile WHERE user_id = ?", (USER_ID,)
-            )
-        ).fetchone()
-        cash = row["cash_balance"] if row else 0.0
-
-        rows = await (
-            await db.execute(
-                "SELECT ticker, quantity FROM positions WHERE user_id = ?", (USER_ID,)
-            )
-        ).fetchall()
-
-        total = cash
-        for r in rows:
-            p = price_cache.get_price(r["ticker"])
-            if p:
-                total += p * r["quantity"]
-
-        await db.execute(
-            "INSERT INTO portfolio_snapshots (id, user_id, total_value, recorded_at) "
-            "VALUES (?, ?, ?, ?)",
-            (str(uuid.uuid4()), USER_ID, round(total, 4), _now()),
-        )
-        await db.commit()
