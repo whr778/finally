@@ -18,7 +18,8 @@ from app.database import get_db, init_db
 from app.market import PriceCache, create_market_data_source, create_stream_router
 from app.routes.chat import router as chat_router
 from app.routes.health import router as health_router
-from app.routes.portfolio import router as portfolio_router, _insert_snapshot
+from app.routes.portfolio import _insert_snapshot
+from app.routes.portfolio import router as portfolio_router
 from app.routes.watchlist import router as watchlist_router
 
 # Path where the Next.js static export is placed (Dockerfile copies it here).

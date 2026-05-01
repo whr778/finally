@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from pydantic import BaseModel
 
-
 # --- Requests ---
 
 
@@ -50,6 +49,7 @@ class TradeOut(BaseModel):
 
 class WatchlistEntry(BaseModel):
     ticker: str
+    added_at: str | None = None
     price: float | None
     previous_price: float | None
     change_percent: float | None

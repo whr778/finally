@@ -21,31 +21,30 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _entry_for(ticker: str, added_at: str | None, price_cache) -> WatchlistEntry:
+    update = price_cache.get(ticker)
+    return WatchlistEntry(
+        ticker=ticker,
+        added_at=added_at,
+        price=update.price if update else None,
+        previous_price=update.previous_price if update else None,
+        change_percent=update.change_percent if update else None,
+        direction=update.direction if update else None,
+    )
+
+
 @router.get("/api/watchlist", response_model=list[WatchlistEntry])
 async def get_watchlist(request: Request):
     price_cache = request.app.state.price_cache
     async with get_db() as db:
         rows = await (
             await db.execute(
-                "SELECT ticker FROM watchlist WHERE user_id = ? ORDER BY added_at",
+                "SELECT ticker, added_at FROM watchlist WHERE user_id = ? ORDER BY added_at",
                 (USER_ID,),
             )
         ).fetchall()
 
-    entries = []
-    for r in rows:
-        ticker = r["ticker"]
-        update = price_cache.get(ticker)
-        entries.append(
-            WatchlistEntry(
-                ticker=ticker,
-                price=update.price if update else None,
-                previous_price=update.previous_price if update else None,
-                change_percent=update.change_percent if update else None,
-                direction=update.direction if update else None,
-            )
-        )
-    return entries
+    return [_entry_for(r["ticker"], r["added_at"], price_cache) for r in rows]
 
 
 @router.post("/api/watchlist", response_model=WatchlistEntry, status_code=201)
@@ -64,23 +63,20 @@ async def add_to_watchlist(body: WatchlistAddRequest, request: Request):
         if existing:
             raise HTTPException(status_code=409, detail=f"{ticker} is already on your watchlist")
 
+        market_source = request.app.state.market_source
+        if not await market_source.validate_ticker(ticker):
+            raise HTTPException(status_code=400, detail=f"Unknown ticker: {ticker}")
+
+        added_at = _now()
         await db.execute(
             "INSERT INTO watchlist (id, user_id, ticker, added_at) VALUES (?, ?, ?, ?)",
-            (str(uuid.uuid4()), USER_ID, ticker, _now()),
+            (str(uuid.uuid4()), USER_ID, ticker, added_at),
         )
         await db.commit()
 
-    await request.app.state.market_source.add_ticker(ticker)
+    await market_source.add_ticker(ticker)
 
-    price_cache = request.app.state.price_cache
-    update = price_cache.get(ticker)
-    return WatchlistEntry(
-        ticker=ticker,
-        price=update.price if update else None,
-        previous_price=update.previous_price if update else None,
-        change_percent=update.change_percent if update else None,
-        direction=update.direction if update else None,
-    )
+    return _entry_for(ticker, added_at, request.app.state.price_cache)
 
 
 @router.delete("/api/watchlist/{ticker}", status_code=204)

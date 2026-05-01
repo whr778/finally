@@ -146,6 +146,98 @@ class TestTrade:
         assert "executed_at" in resp.json()
 
 
+class TestWatchlist:
+    async def test_get_watchlist_returns_seeded_defaults(self, client):
+        resp = await client.get("/api/watchlist")
+        assert resp.status_code == 200
+        data = resp.json()
+        tickers = [e["ticker"] for e in data]
+        assert "AAPL" in tickers
+        assert "GOOGL" in tickers
+
+    async def test_get_watchlist_includes_added_at_and_price(self, client):
+        resp = await client.get("/api/watchlist")
+        data = resp.json()
+        aapl = next(e for e in data if e["ticker"] == "AAPL")
+        assert aapl["added_at"] is not None
+        assert aapl["price"] == pytest.approx(190.50)
+        assert aapl["previous_price"] == pytest.approx(190.50)
+        assert aapl["direction"] == "flat"
+
+    async def test_get_watchlist_unknown_ticker_has_null_price(self, client):
+        # ZZZZ is not in the price cache; if it were on the watchlist it should still appear
+        # First add it via DB to bypass validation, simulating an out-of-sync cache.
+        import uuid
+        from datetime import datetime, timezone
+
+        from app.database import get_db
+
+        async with get_db() as db:
+            await db.execute(
+                "INSERT INTO watchlist (id, user_id, ticker, added_at) VALUES (?, ?, ?, ?)",
+                (str(uuid.uuid4()), "default", "ZZZZ", datetime.now(timezone.utc).isoformat()),
+            )
+            await db.commit()
+
+        resp = await client.get("/api/watchlist")
+        zzzz = next(e for e in resp.json() if e["ticker"] == "ZZZZ")
+        assert zzzz["price"] is None
+        assert zzzz["direction"] is None
+
+    async def test_post_watchlist_adds_ticker(self, client, fake_market_source):
+        resp = await client.post("/api/watchlist", json={"ticker": "PYPL"})
+        assert resp.status_code == 201
+        body = resp.json()
+        assert body["ticker"] == "PYPL"
+        assert body["added_at"] is not None
+        assert "PYPL" in fake_market_source.added
+
+        listing = (await client.get("/api/watchlist")).json()
+        assert any(e["ticker"] == "PYPL" for e in listing)
+
+    async def test_post_watchlist_lowercase_is_normalized(self, client):
+        resp = await client.post("/api/watchlist", json={"ticker": "pypl"})
+        assert resp.status_code == 201
+        assert resp.json()["ticker"] == "PYPL"
+
+    async def test_post_watchlist_rejects_invalid_format(self, client):
+        resp = await client.post("/api/watchlist", json={"ticker": "TOOLONG"})
+        assert resp.status_code == 400
+
+    async def test_post_watchlist_rejects_duplicate(self, client):
+        resp = await client.post("/api/watchlist", json={"ticker": "AAPL"})
+        assert resp.status_code == 409
+
+    async def test_post_watchlist_rejects_unknown_in_massive_mode(
+        self, seeded_db, price_cache_with_prices, monkeypatch
+    ):
+        from httpx import ASGITransport, AsyncClient
+
+        from app.main import app
+        from tests.conftest import FakeMarketSource
+
+        strict_source = FakeMarketSource(price_cache_with_prices, known_tickers={"AAPL", "GOOGL"})
+        app.state.price_cache = price_cache_with_prices
+        app.state.market_source = strict_source
+
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+            resp = await ac.post("/api/watchlist", json={"ticker": "FAKE"})
+            assert resp.status_code == 400
+            assert "FAKE" in resp.json()["detail"]
+
+    async def test_delete_watchlist_removes_ticker(self, client, fake_market_source):
+        resp = await client.delete("/api/watchlist/AAPL")
+        assert resp.status_code == 204
+        assert "AAPL" in fake_market_source.removed
+
+        listing = (await client.get("/api/watchlist")).json()
+        assert not any(e["ticker"] == "AAPL" for e in listing)
+
+    async def test_delete_watchlist_unknown_ticker_404(self, client):
+        resp = await client.delete("/api/watchlist/ZZZZ")
+        assert resp.status_code == 404
+
+
 class TestPortfolioHistory:
     async def test_history_returns_list(self, client):
         resp = await client.get("/api/portfolio/history")

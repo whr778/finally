@@ -257,6 +257,10 @@ class SimulatorDataSource(MarketDataSource):
     def get_tickers(self) -> list[str]:
         return self._sim.get_tickers() if self._sim else []
 
+    async def validate_ticker(self, ticker: str) -> bool:
+        """Simulator accepts any caller-supplied ticker. Format is enforced upstream."""
+        return True
+
     async def _run_loop(self) -> None:
         """Core loop: step the simulation, write to cache, sleep."""
         while True:

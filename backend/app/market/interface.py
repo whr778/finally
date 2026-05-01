@@ -55,3 +55,11 @@ class MarketDataSource(ABC):
     @abstractmethod
     def get_tickers(self) -> list[str]:
         """Return the current list of actively tracked tickers."""
+
+    @abstractmethod
+    async def validate_ticker(self, ticker: str) -> bool:
+        """Return True if the ticker is recognized by this data source.
+
+        Simulator: accepts any properly-formatted symbol (format check is at the
+        route layer). Massive: queries the API to confirm the ticker exists.
+        """

@@ -89,8 +89,8 @@ async def init_db() -> None:
 
 async def _seed(db: aiosqlite.Connection) -> None:
     """Insert the default user profile and watchlist."""
-    from datetime import datetime, timezone
     import uuid
+    from datetime import datetime, timezone
 
     now = datetime.now(timezone.utc).isoformat()
     await db.execute(

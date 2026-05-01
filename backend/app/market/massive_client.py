@@ -77,6 +77,29 @@ class MassiveDataSource(MarketDataSource):
     def get_tickers(self) -> list[str]:
         return list(self._tickers)
 
+    async def validate_ticker(self, ticker: str) -> bool:
+        """Confirm the ticker exists by fetching a single-ticker snapshot.
+
+        Returns True when Massive returns at least one snapshot with a usable price.
+        Network/auth errors return False so the route can reject with a clear message.
+        """
+        if not self._client:
+            return False
+        symbol = ticker.upper().strip()
+        try:
+            snapshots = await asyncio.to_thread(
+                self._client.get_snapshot_all,
+                market_type="stocks",
+                tickers=[symbol],
+            )
+        except Exception as e:
+            logger.warning("Massive validate_ticker(%s) failed: %s", symbol, e)
+            return False
+        for snap in snapshots:
+            if getattr(snap, "ticker", None) == symbol and self._extract_price(snap) is not None:
+                return True
+        return False
+
     # --- Internal ---
 
     async def _poll_loop(self) -> None:
