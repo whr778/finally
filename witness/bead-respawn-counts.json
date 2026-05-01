@@ -15,6 +15,21 @@
       "count": 1,
       "last_respawn": "2026-05-01T12:52:23.509518Z"
     },
+    "fi-mjm.12": {
+      "bead_id": "fi-mjm.12",
+      "count": 1,
+      "last_respawn": "2026-05-01T12:52:53.624587Z"
+    },
+    "fi-mjm.13": {
+      "bead_id": "fi-mjm.13",
+      "count": 1,
+      "last_respawn": "2026-05-01T12:53:23.61184Z"
+    },
+    "fi-mjm.14": {
+      "bead_id": "fi-mjm.14",
+      "count": 1,
+      "last_respawn": "2026-05-01T12:53:53.715604Z"
+    },
     "fi-mjm.2": {
       "bead_id": "fi-mjm.2",
       "count": 2,
@@ -44,7 +59,17 @@
       "bead_id": "fi-mjm.7",
       "count": 1,
       "last_respawn": "2026-05-01T12:37:23.80307Z"
+    },
+    "fi-mjm.8": {
+      "bead_id": "fi-mjm.8",
+      "count": 1,
+      "last_respawn": "2026-05-01T12:54:23.745635Z"
+    },
+    "fi-mjm.9": {
+      "bead_id": "fi-mjm.9",
+      "count": 1,
+      "last_respawn": "2026-05-01T12:54:53.96529Z"
     }
   },
-  "last_updated": "2026-05-01T12:52:23.509521Z"
+  "last_updated": "2026-05-01T12:54:53.965293Z"
 }

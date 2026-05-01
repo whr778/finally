@@ -1,0 +1,9 @@
+{
+  "channel": "witness",
+  "payload": {
+    "message": "POLECAT_DONE fury exit=COMPLETED",
+    "source": "polecat"
+  },
+  "timestamp": "2026-05-01T09:02:28-04:00",
+  "type": "POLECAT_DONE"
+}

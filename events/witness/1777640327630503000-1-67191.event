@@ -1,0 +1,9 @@
+{
+  "channel": "witness",
+  "payload": {
+    "message": "POLECAT_DONE chrome exit=COMPLETED",
+    "source": "polecat"
+  },
+  "timestamp": "2026-05-01T08:58:47-04:00",
+  "type": "POLECAT_DONE"
+}
