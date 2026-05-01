@@ -1,0 +1,9 @@
+{
+  "channel": "refinery",
+  "payload": {
+    "message": "MERGE_READY received - check inbox for pending work",
+    "source": "sling"
+  },
+  "timestamp": "2026-05-01T10:53:19-04:00",
+  "type": "MQ_SUBMIT"
+}
