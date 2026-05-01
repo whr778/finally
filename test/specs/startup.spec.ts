@@ -8,54 +8,49 @@ test.describe("App startup", () => {
   test("page loads and shows the FinAlly header", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("header")).toBeVisible();
-    await expect(page.getByText("Fin")).toBeVisible();
-    await expect(page.getByText("Ally")).toBeVisible();
+    await expect(page.locator("header").getByText("FinAlly")).toBeVisible();
   });
 
-  test("shows $10,000 starting portfolio value", async ({ page }) => {
+  test("shows $10,000 starting portfolio value in header", async ({ page }) => {
     await page.goto("/");
-    // Wait for the portfolio data to load
-    const totalValue = page.getByTestId("total-value");
-    await expect(totalValue).toBeVisible({ timeout: 10_000 });
-    await expect(totalValue).toContainText("10,000");
+    const header = page.locator("header");
+    await expect(header.getByText(/Total Value/i)).toBeVisible({ timeout: 10_000 });
+    await expect(header).toContainText(/10,000/);
   });
 
-  test("shows $10,000 starting cash balance", async ({ page }) => {
+  test("shows $10,000 starting cash balance in header", async ({ page }) => {
     await page.goto("/");
-    const cashBalance = page.getByTestId("cash-balance");
-    await expect(cashBalance).toBeVisible({ timeout: 10_000 });
-    await expect(cashBalance).toContainText("10,000");
+    const header = page.locator("header");
+    await expect(header.getByText(/Cash/i)).toBeVisible({ timeout: 10_000 });
+    await expect(header).toContainText(/10,000/);
   });
 
   test("default watchlist shows expected tickers", async ({ page }) => {
     await page.goto("/");
-    // Wait for the watchlist to appear
     await expect(page.getByTestId("watchlist-row-AAPL")).toBeVisible({ timeout: 10_000 });
     await expect(page.getByTestId("watchlist-row-GOOGL")).toBeVisible();
     await expect(page.getByTestId("watchlist-row-MSFT")).toBeVisible();
     await expect(page.getByTestId("watchlist-row-TSLA")).toBeVisible();
   });
 
-  test("SSE connection indicator shows LIVE", async ({ page }) => {
+  test("connection status indicator becomes 'connected'", async ({ page }) => {
     await page.goto("/");
-    const dot = page.getByTestId("connection-dot");
-    // Wait up to 10s for SSE to connect
-    await expect(dot).toContainText("LIVE", { timeout: 10_000 });
+    const status = page.getByTestId("connection-status");
+    await expect(status).toContainText("connected", { timeout: 10_000 });
   });
 
-  test("AI chat panel is visible and shows prompt", async ({ page }) => {
+  test("AI chat panel is visible", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByTestId("chat-panel")).toBeVisible();
-    await expect(page.getByText("AI Assistant")).toBeVisible();
-    await expect(page.getByTestId("chat-input")).toBeVisible();
+    await expect(page.getByLabel("chat message")).toBeVisible();
   });
 
   test("trade bar inputs are visible", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByTestId("trade-bar")).toBeVisible();
-    await expect(page.getByTestId("trade-ticker")).toBeVisible();
-    await expect(page.getByTestId("trade-qty")).toBeVisible();
-    await expect(page.getByTestId("btn-buy")).toBeVisible();
-    await expect(page.getByTestId("btn-sell")).toBeVisible();
+    await expect(page.getByLabel("ticker")).toBeVisible();
+    await expect(page.getByLabel("quantity")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Buy", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sell", exact: true })).toBeVisible();
   });
 });

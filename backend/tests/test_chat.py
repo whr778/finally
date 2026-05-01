@@ -207,6 +207,25 @@ class TestChatMockMode:
         assert resp.status_code == 200
         assert "portfolio" in resp.json()["message"].lower()
 
+    async def test_chat_mock_mode_buy_intent_executes_trade(self, client):
+        # AAPL is pre-seeded in price_cache_with_prices fixture at 190.50
+        resp = await client.post("/api/chat", json={"content": "please buy 2 AAPL"})
+        assert resp.status_code == 200
+        body = resp.json()
+        assert len(body["trades_executed"]) == 1
+        assert body["trades_executed"][0]["ticker"] == "AAPL"
+        assert body["trades_executed"][0]["side"] == "buy"
+        assert body["trades_executed"][0]["success"] is True
+
+    async def test_chat_mock_mode_watchlist_add_intent(self, client):
+        resp = await client.post("/api/chat", json={"content": "add PYPL to my watchlist"})
+        assert resp.status_code == 200
+        body = resp.json()
+        assert any(
+            c["ticker"] == "PYPL" and c["action"] == "add"
+            for c in body["watchlist_changes"]
+        )
+
 
 class TestChatMissingApiKey:
     async def test_missing_key_returns_descriptive_message(self, client, monkeypatch):

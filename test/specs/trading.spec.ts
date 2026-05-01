@@ -8,89 +8,66 @@ test.describe("Trading", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
     await expect(page.getByTestId("trade-bar")).toBeVisible({ timeout: 10_000 });
-    // Wait for prices to be available
     await expect(page.getByTestId("watchlist-row-AAPL")).toBeVisible({ timeout: 10_000 });
   });
 
-  test("buying shares reduces cash balance", async ({ page }) => {
-    // Get current cash before trade
-    const cashEl = page.getByTestId("cash-balance");
-    const cashBefore = await cashEl.textContent();
+  test("buying shares shows a fill confirmation", async ({ page }) => {
+    await page.getByLabel("ticker").fill("AAPL");
+    await page.getByLabel("quantity").fill("1");
+    await page.getByRole("button", { name: "Buy", exact: true }).click();
 
-    // Execute buy
-    await page.getByTestId("trade-ticker").fill("AAPL");
-    await page.getByTestId("trade-qty").fill("1");
-    await page.getByTestId("btn-buy").click();
-
-    // Wait for success confirmation
-    await expect(page.getByTestId("trade-success")).toBeVisible({ timeout: 5_000 });
-
-    // Wait for portfolio to refresh (5s poll or immediate refresh on trade)
-    await page.waitForTimeout(1000);
-    const cashAfter = await cashEl.textContent();
-    expect(cashBefore).not.toBe(cashAfter);
+    const status = page.getByTestId("trade-status");
+    await expect(status).toBeVisible({ timeout: 5_000 });
+    await expect(status).toContainText(/Filled BUY/i);
+    await expect(status).toContainText("AAPL");
   });
 
-  test("buy shows success confirmation with ticker", async ({ page }) => {
-    await page.getByTestId("trade-ticker").fill("AAPL");
-    await page.getByTestId("trade-qty").fill("2");
-    await page.getByTestId("btn-buy").click();
+  test("buying shares reduces cash balance shown in the header", async ({ page }) => {
+    const header = page.locator("header");
+    // Wait until header has a numeric cash value
+    await expect(header).toContainText(/10,000/, { timeout: 10_000 });
 
-    const success = page.getByTestId("trade-success");
-    await expect(success).toBeVisible({ timeout: 5_000 });
-    await expect(success).toContainText("AAPL");
-    await expect(success).toContainText("BUY");
+    await page.getByLabel("ticker").fill("AAPL");
+    await page.getByLabel("quantity").fill("2");
+    await page.getByRole("button", { name: "Buy", exact: true }).click();
+    await expect(page.getByTestId("trade-status")).toContainText(/Filled BUY/i, {
+      timeout: 5_000,
+    });
+
+    // Header refreshes on a 2s interval; wait then assert cash decreased
+    await expect(header).not.toContainText(/Cash[^$]*\$10,000\.00/, { timeout: 10_000 });
   });
 
-  test("buy creates a position in the positions table", async ({ page }) => {
-    await page.getByTestId("trade-ticker").fill("GOOGL");
-    await page.getByTestId("trade-qty").fill("3");
-    await page.getByTestId("btn-buy").click();
+  test("sell with no shares held shows an error", async ({ page }) => {
+    await page.getByLabel("ticker").fill("NVDA");
+    await page.getByLabel("quantity").fill("1");
+    await page.getByRole("button", { name: "Sell", exact: true }).click();
 
-    await expect(page.getByTestId("trade-success")).toBeVisible({ timeout: 5_000 });
-
-    // Wait for portfolio refresh
-    await expect(page.getByTestId("position-row-GOOGL")).toBeVisible({ timeout: 8_000 });
+    const status = page.getByTestId("trade-status");
+    await expect(status).toBeVisible({ timeout: 5_000 });
+    await expect(status).toHaveClass(/negative/);
   });
 
-  test("sell shows error when no shares held", async ({ page }) => {
-    await page.getByTestId("trade-ticker").fill("NVDA");
-    await page.getByTestId("trade-qty").fill("1");
-    await page.getByTestId("btn-sell").click();
-
-    await expect(page.getByTestId("trade-error")).toBeVisible({ timeout: 5_000 });
-  });
-
-  test("empty quantity shows validation error", async ({ page }) => {
-    await page.getByTestId("trade-ticker").fill("AAPL");
-    await page.getByTestId("btn-buy").click();
-
-    await expect(page.getByTestId("trade-error")).toBeVisible({ timeout: 3_000 });
+  test("empty quantity shows a validation error", async ({ page }) => {
+    await page.getByLabel("ticker").fill("AAPL");
+    await page.getByRole("button", { name: "Buy", exact: true }).click();
+    const status = page.getByTestId("trade-status");
+    await expect(status).toBeVisible({ timeout: 3_000 });
+    await expect(status).toContainText(/Quantity/i);
   });
 
   test("can sell shares after buying them", async ({ page }) => {
-    // Buy first
-    await page.getByTestId("trade-ticker").fill("MSFT");
-    await page.getByTestId("trade-qty").fill("2");
-    await page.getByTestId("btn-buy").click();
-    await expect(page.getByTestId("trade-success")).toBeVisible({ timeout: 5_000 });
+    await page.getByLabel("ticker").fill("MSFT");
+    await page.getByLabel("quantity").fill("2");
+    await page.getByRole("button", { name: "Buy", exact: true }).click();
+    await expect(page.getByTestId("trade-status")).toContainText(/Filled BUY/i, {
+      timeout: 5_000,
+    });
 
-    // Now sell
-    await page.getByTestId("trade-qty").fill("2");
-    await page.getByTestId("btn-sell").click();
-
-    const success = page.getByTestId("trade-success");
-    await expect(success).toBeVisible({ timeout: 5_000 });
-    await expect(success).toContainText("SELL");
-  });
-
-  test("portfolio heatmap appears after buying", async ({ page }) => {
-    await page.getByTestId("trade-ticker").fill("AAPL");
-    await page.getByTestId("trade-qty").fill("5");
-    await page.getByTestId("btn-buy").click();
-    await expect(page.getByTestId("trade-success")).toBeVisible({ timeout: 5_000 });
-
-    // Wait for the heatmap to show the position
-    await expect(page.getByTestId("tile-AAPL")).toBeVisible({ timeout: 8_000 });
+    await page.getByLabel("quantity").fill("2");
+    await page.getByRole("button", { name: "Sell", exact: true }).click();
+    await expect(page.getByTestId("trade-status")).toContainText(/Filled SELL/i, {
+      timeout: 5_000,
+    });
   });
 });

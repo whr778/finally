@@ -5,42 +5,34 @@ import { test, expect } from "@playwright/test";
  */
 
 test.describe("SSE connection resilience", () => {
-  test("connection indicator shows LIVE when stream is active", async ({ page }) => {
+  test("connection indicator becomes 'connected' when stream is active", async ({ page }) => {
     await page.goto("/");
-    const dot = page.getByTestId("connection-dot");
-    await expect(dot).toContainText("LIVE", { timeout: 10_000 });
+    const status = page.getByTestId("connection-status");
+    await expect(status).toContainText("connected", { timeout: 10_000 });
   });
 
-  test("prices update in the watchlist over time", async ({ page }) => {
-    await page.goto("/");
-
-    // Wait for initial price to appear
-    await expect(page.getByTestId("watchlist-row-AAPL")).toBeVisible({ timeout: 10_000 });
-
-    // Capture initial AAPL row text
-    const row = page.getByTestId("watchlist-row-AAPL");
-    const before = await row.textContent();
-
-    // Wait for a price change (simulator updates every 500ms)
-    await page.waitForTimeout(2000);
-    const after = await row.textContent();
-
-    // Prices should have changed (sparkline grows, at minimum)
-    // This is a soft assertion — prices MIGHT be the same briefly
-    expect(before).toBeDefined();
-    expect(after).toBeDefined();
-  });
-
-  test("sparkline appears after prices stream in", async ({ page }) => {
+  test("sparkline appears in watchlist row after prices stream in", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByTestId("watchlist-row-AAPL")).toBeVisible({ timeout: 10_000 });
 
-    // Wait for at least a few price updates so sparkline builds up
-    await page.waitForTimeout(3000);
+    // Allow several simulator ticks (~500ms each) so the sparkline series builds up.
+    await page.waitForTimeout(3_000);
 
-    // SVG sparkline should exist in the AAPL row
     const row = page.getByTestId("watchlist-row-AAPL");
-    const svg = row.locator("svg");
-    await expect(svg).toBeVisible();
+    await expect(row.locator("svg")).toBeVisible();
+  });
+
+  test("EventSource recovers after going offline and back online", async ({ page, context }) => {
+    await page.goto("/");
+    const status = page.getByTestId("connection-status");
+    await expect(status).toContainText("connected", { timeout: 10_000 });
+
+    // Drop the connection. The hook should mark the stream as not connected.
+    await context.setOffline(true);
+    await expect(status).not.toContainText("connected", { timeout: 10_000 });
+
+    // Restore: EventSource auto-reconnects and status returns to 'connected'.
+    await context.setOffline(false);
+    await expect(status).toContainText("connected", { timeout: 20_000 });
   });
 });

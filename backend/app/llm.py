@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 from typing import Any
 
 import litellm
@@ -44,11 +45,35 @@ class ChatLLMResponse(BaseModel):
     watchlist_changes: list[ChatWatchlistChange] = Field(default_factory=list)
 
 
-_MOCK_RESPONSE: dict[str, Any] = {
-    "message": "I'm analyzing your portfolio. Everything looks good — your positions are diversified.",
-    "trades": [],
-    "watchlist_changes": [],
-}
+_MOCK_DEFAULT_MESSAGE = (
+    "I'm analyzing your portfolio. Everything looks good — your positions are diversified."
+)
+
+_MOCK_TRADE_RE = re.compile(r"\b(buy|sell)\s+(\d+(?:\.\d+)?)\s+([A-Z]{1,5})\b", re.IGNORECASE)
+_MOCK_WATCH_ADD_RE = re.compile(r"\b(?:add|watch)\s+([A-Z]{1,5})\b", re.IGNORECASE)
+_MOCK_WATCH_REMOVE_RE = re.compile(r"\b(?:remove|drop|unwatch)\s+([A-Z]{1,5})\b", re.IGNORECASE)
+
+
+def _build_mock_response(user_message: str) -> dict[str, Any]:
+    """Deterministic test response. Parses simple intents from the user message
+    so E2E tests can exercise inline trade/watchlist execution.
+    """
+    trades: list[dict[str, Any]] = []
+    watchlist_changes: list[dict[str, Any]] = []
+
+    for side, qty, ticker in _MOCK_TRADE_RE.findall(user_message):
+        trades.append({"ticker": ticker.upper(), "side": side.lower(), "quantity": float(qty)})
+    for ticker in _MOCK_WATCH_ADD_RE.findall(user_message):
+        if not _MOCK_TRADE_RE.search(user_message):
+            watchlist_changes.append({"ticker": ticker.upper(), "action": "add"})
+    for ticker in _MOCK_WATCH_REMOVE_RE.findall(user_message):
+        watchlist_changes.append({"ticker": ticker.upper(), "action": "remove"})
+
+    return {
+        "message": _MOCK_DEFAULT_MESSAGE,
+        "trades": trades,
+        "watchlist_changes": watchlist_changes,
+    }
 
 
 def _is_mock() -> bool:
@@ -66,7 +91,7 @@ async def call_llm(portfolio_context: str, history: list[dict], user_message: st
     so the chat endpoint can still return a useful payload to the client.
     """
     if _is_mock():
-        return dict(_MOCK_RESPONSE)
+        return _build_mock_response(user_message)
 
     key = _api_key()
     if not key:
