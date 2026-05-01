@@ -40,6 +40,11 @@
       "count": 1,
       "last_respawn": "2026-05-01T14:29:24.001898Z"
     },
+    "fi-mjm.17": {
+      "bead_id": "fi-mjm.17",
+      "count": 1,
+      "last_respawn": "2026-05-01T14:39:56.388742Z"
+    },
     "fi-mjm.2": {
       "bead_id": "fi-mjm.2",
       "count": 2,
@@ -81,5 +86,5 @@
       "last_respawn": "2026-05-01T12:54:53.96529Z"
     }
   },
-  "last_updated": "2026-05-01T14:29:24.001903Z"
+  "last_updated": "2026-05-01T14:39:56.388747Z"
 }
