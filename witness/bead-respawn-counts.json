@@ -1,0 +1,20 @@
+{
+  "beads": {
+    "fi-mjm.1": {
+      "bead_id": "fi-mjm.1",
+      "count": 1,
+      "last_respawn": "2026-05-01T12:32:02.595914Z"
+    },
+    "fi-mjm.2": {
+      "bead_id": "fi-mjm.2",
+      "count": 1,
+      "last_respawn": "2026-05-01T12:32:23.153117Z"
+    },
+    "fi-mjm.3": {
+      "bead_id": "fi-mjm.3",
+      "count": 1,
+      "last_respawn": "2026-05-01T12:32:30.688381Z"
+    }
+  },
+  "last_updated": "2026-05-01T12:32:30.688389Z"
+}

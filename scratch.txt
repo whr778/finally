@@ -1,3 +1,7 @@
+brew install gastown # mac
+npm install gastown # node
+
+
 Please carry out comprehensive research and write 3 documents to the planning directory.
 Research the API from Massive (formerly Polygon.io) for retreiving realtime and end of day proces for multiple tickers; write documentation with code samples in MASSIVE_API.md.  
 Use MASSIVE_API.md to design the unified Python API that we should use in this project for retreiving stock prices that uses the Massive API if the MASSIVE_API_KEY is set, otherwise uses a simulator; Document this in the MARKET_INTERFACE.md.  
@@ -13,3 +17,6 @@ This should include:
 2. The unified market data interface
 3. The market data simulator
 Include full unit tests
+
+
+Build the entire project as specified in planning/PLAN.md. File the issues, create a convoy, and sling the work to polecats.
