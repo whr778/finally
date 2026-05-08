@@ -1,0 +1,10 @@
+{
+  "running": true,
+  "pid": 8518,
+  "port": 3307,
+  "started_at": "2026-05-08T07:49:39.013699-04:00",
+  "data_dir": "/Users/williamroe/development/projects/agentic_coder/finally_gastown/.dolt-data",
+  "databases": [
+    "hq"
+  ]
+}

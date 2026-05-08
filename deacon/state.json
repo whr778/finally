@@ -1,0 +1,6 @@
+{
+  "patrol_count": 10,
+  "last_patrol": "2026-05-08T08:40:00Z",
+  "extraordinary_action": false,
+  "last_action": "Patrol 6 (new session post-handoff): handoff hq-pvd read+deleted. finally rig healthy (witness fi-witness up, refinery fi-refinery up, 7 polecats, 1 crew). No orphans, no test pollution, no zombies via patrol scan, no convoys, no callbacks. Inbox empty post-handoff. zombie pid 7176 (dolt sql-server, S-state) persists per health.zombie_pids — no kill authority, carries forward. Refinery queue: 1 pending. Effort signal: full."
+}

@@ -1,0 +1,11 @@
+{
+  "sender": "mayor/",
+  "message": "📬 You have new mail from mayor/. Subject: Re: Convoy complete: fi-woe. Run 'gt mail inbox' to read.",
+  "priority": "normal",
+  "kind": "mail",
+  "thread_id": "thread-13935405c768",
+  "severity": "medium",
+  "timestamp": "2026-05-08T08:52:04.125545-04:00",
+  "expires_at": "2026-05-08T09:22:04.125545-04:00",
+  "deliver_after": "0001-01-01T00:00:00Z"
+}

@@ -1,7 +1,7 @@
 {
   "running": true,
-  "pid": 25713,
-  "started_at": "2026-05-01T08:02:49.862983-04:00",
-  "last_heartbeat": "2026-05-01T11:50:14.685538-04:00",
-  "heartbeat_count": 74
+  "pid": 7109,
+  "started_at": "2026-05-08T07:49:14.062254-04:00",
+  "last_heartbeat": "2026-05-08T08:54:21.842015-04:00",
+  "heartbeat_count": 22
 }

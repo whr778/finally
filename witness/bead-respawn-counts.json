@@ -84,7 +84,12 @@
       "bead_id": "fi-mjm.9",
       "count": 1,
       "last_respawn": "2026-05-01T12:54:53.96529Z"
+    },
+    "fi-woe": {
+      "bead_id": "fi-woe",
+      "count": 1,
+      "last_respawn": "2026-05-08T12:33:18.09251Z"
     }
   },
-  "last_updated": "2026-05-01T14:39:56.388747Z"
+  "last_updated": "2026-05-08T12:33:18.092514Z"
 }
